@@ -17,40 +17,20 @@ const teams = [
     },
 ];
 
-app.put('/teams', (req, res) => {
-    const { id, name, initials } = req.body;
-
-    const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
-
-    if (!teamToEdit) {
-        return res.status(404).json({ message: 'Time não encontrado' });
-    }
-
-    teamToEdit.name = name;
-    teamToEdit.initials = initials;
-
-    return res.status(200).json({ teams });
-});
-
-app.put('/teams/:id', (req, res) => {
+app.delete('/teams/:id', (req, res) => {
     const { id } = req.params;
+    const teamIndex = teams.findIndex(({ id: teamId }) => teamId === Number(id));
 
-    const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+    teams.splice(teamIndex, 1);
 
-    if (!teamToEdit) {
-        return res.status(404).json({ message: 'Time não encontrado' });
-    }
+    console.log(teams);
 
-    const { name, initials } = req.body;
-    
-    teamToEdit.name = name;
-    teamToEdit.initials = initials;
-
-    return res.status(200).json({ teams });
+    return res.status(200).end();
 });
 
 module.exports = app;
 
+// Methods
 // app.get('/teams', (req, res) => res.status(200).json({ teams }));
 
 // Body usado: 
@@ -70,6 +50,39 @@ module.exports = app;
 //     return res.status(201).json({ team: newObj });
 // });
 
+// app.put('/teams', (req, res) => {
+//     const { id, name, initials } = req.body;
+
+//     const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+
+//     if (!teamToEdit) {
+//         return res.status(404).json({ message: 'Time não encontrado' });
+//     }
+
+//     teamToEdit.name = name;
+//     teamToEdit.initials = initials;
+
+//     return res.status(200).json({ teams });
+// });
+
+// app.put('/teams/:id', (req, res) => {
+//     const { id } = req.params;
+
+//     const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+
+//     if (!teamToEdit) {
+//         return res.status(404).json({ message: 'Time não encontrado' });
+//     }
+
+//     const { name, initials } = req.body;
+    
+//     teamToEdit.name = name;
+//     teamToEdit.initials = initials;
+
+//     return res.status(200).json({ teams });
+// });
+
+// Testes
 // app.get('/', (req, res) => res.status(200).json({ message: 'Olá Mundo!' }));
 
 // app.get('/q', (req, res) => res.status(200).json({ message: req.query.name }));
