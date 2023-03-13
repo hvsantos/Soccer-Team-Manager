@@ -17,6 +17,42 @@ const teams = [
     },
 ];
 
+app.put('/teams', (req, res) => {
+    const { id, name, initials } = req.body;
+
+    const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+
+    if (!teamToEdit) {
+        return res.status(404).json({ message: 'Time não encontrado' });
+    }
+
+    teamToEdit.name = name;
+    teamToEdit.initials = initials;
+
+    return res.status(200).json({ teams });
+});
+
+app.put('/teams/:id', (req, res) => {
+    const { id } = req.params;
+
+    const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+
+    if (!teamToEdit) {
+        return res.status(404).json({ message: 'Time não encontrado' });
+    }
+
+    const { name, initials } = req.body;
+    
+    teamToEdit.name = name;
+    teamToEdit.initials = initials;
+
+    return res.status(200).json({ teams });
+});
+
+module.exports = app;
+
+// app.get('/teams', (req, res) => res.status(200).json({ teams }));
+
 // Body usado: 
 // {
 //     "id": 3,
@@ -24,19 +60,15 @@ const teams = [
 //     "initials": "AME"
 // }
 
-app.post('/teams', (req, res) => {
-    const newObj = { ...req.body };
+// app.post('/teams', (req, res) => {
+//     const newObj = { ...req.body };
 
-    teams.push(newObj);
+//     teams.push(newObj);
 
-    console.log(teams);
+//     console.log(teams);
 
-    return res.status(201).json({ team: newObj });
-});
-
-module.exports = app;
-
-// app.get('/teams', (req, res) => res.status(200).json({ teams }));
+//     return res.status(201).json({ team: newObj });
+// });
 
 // app.get('/', (req, res) => res.status(200).json({ message: 'Olá Mundo!' }));
 
