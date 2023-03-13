@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+app.use(express.json());
+
 const teams = [
     {
       id: 1,
@@ -15,11 +17,26 @@ const teams = [
     },
 ];
 
-app.get('/teams', (req, res) => res.status(200).json({ teams }));
+// Body usado: 
+// {
+//     "id": 3,
+//     "name": "América Futebol Clube",
+//     "initials": "AME"
+// }
+
+app.post('/teams', (req, res) => {
+    const newObj = { ...req.body };
+
+    teams.push(newObj);
+
+    console.log(teams);
+
+    return res.status(201).json({ team: newObj });
+});
 
 module.exports = app;
 
-// app.use(express.json());
+// app.get('/teams', (req, res) => res.status(200).json({ teams }));
 
 // app.get('/', (req, res) => res.status(200).json({ message: 'Olá Mundo!' }));
 
