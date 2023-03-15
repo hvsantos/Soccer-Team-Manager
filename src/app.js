@@ -18,9 +18,10 @@ const teams = [
 ];
 
 const verifyPropriety = (req, res, next) => {
-  const teamPropRequired = ['name', 'initials'];
-  if (teamPropRequired.every((prop) => prop in req.body)) next();
-  else res.sendStatus(400);
+  const { name, initials } = req.body;
+  if (!name) return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (!initials) return res.status(400).json({ message: 'O campo "initials" é obrigatório' });
+  next();
 };
 
 app.get('/teams', (req, res) => res.status(200).json({ teams }));
