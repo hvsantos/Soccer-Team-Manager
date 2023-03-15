@@ -17,22 +17,47 @@ const teams = [
     },
 ];
 
+const verifyPropriety = (req, res, next) => {
+  const teamPropRequired = ['name', 'initials'];
+  if (teamPropRequired.every((prop) => prop in req.body)) next();
+  else res.sendStatus(400);
+};
+
+app.get('/teams', (req, res) => res.status(200).json({ teams }));
+
+app.post('/teams', verifyPropriety, (req, res) => {
+  const newObj = { ...req.body };
+  teams.push(newObj);
+  res.status(201).json({ team: newObj });
+});
+
+app.put('/teams/:id', verifyPropriety, (req, res) => {
+  const { id } = req.params;
+  const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
+
+  if (!teamToEdit) return res.status(404).json({ message: 'Time não encontrado' });
+
+  const { name, initials } = req.body;
+  teamToEdit.name = name;
+  teamToEdit.initials = initials;
+
+  res.status(200).json({ teams });
+});
+
 app.delete('/teams/:id', (req, res) => {
-    const { id } = req.params;
-    const teamIndex = teams.findIndex(({ id: teamId }) => teamId === Number(id));
+  const { id } = req.params;
+  const teamIndex = teams.findIndex(({ id: teamId }) => teamId === Number(id));
 
-    teams.splice(teamIndex, 1);
+  if (!teamIndex) return res.status(404).json({ message: 'Time não encontrado' });
 
-    console.log(teams);
+  teams.splice(teamIndex, 1);
 
-    return res.status(200).end();
+  res.status(200).end();
 });
 
 module.exports = app;
 
 // Methods
-// app.get('/teams', (req, res) => res.status(200).json({ teams }));
-
 // Body usado: 
 // {
 //     "id": 3,
@@ -40,42 +65,12 @@ module.exports = app;
 //     "initials": "AME"
 // }
 
-// app.post('/teams', (req, res) => {
-//     const newObj = { ...req.body };
-
-//     teams.push(newObj);
-
-//     console.log(teams);
-
-//     return res.status(201).json({ team: newObj });
-// });
-
 // app.put('/teams', (req, res) => {
 //     const { id, name, initials } = req.body;
-
 //     const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
 
-//     if (!teamToEdit) {
-//         return res.status(404).json({ message: 'Time não encontrado' });
-//     }
+//     if (!teamToEdit) return res.status(404).json({ message: 'Time não encontrado' });
 
-//     teamToEdit.name = name;
-//     teamToEdit.initials = initials;
-
-//     return res.status(200).json({ teams });
-// });
-
-// app.put('/teams/:id', (req, res) => {
-//     const { id } = req.params;
-
-//     const teamToEdit = teams.find(({ id: teamId }) => teamId === Number(id));
-
-//     if (!teamToEdit) {
-//         return res.status(404).json({ message: 'Time não encontrado' });
-//     }
-
-//     const { name, initials } = req.body;
-    
 //     teamToEdit.name = name;
 //     teamToEdit.initials = initials;
 
